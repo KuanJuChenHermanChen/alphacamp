@@ -59,6 +59,17 @@ app.post('/todos', async (req, res, next) => {
   } 
 })
 
+app.get('/todos/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const todo = await Todo.findById(id)
+    res.render('detail', { todo })
+  } catch (err) {
+    console.error(err)
+    next(err);
+  }
+})
+
 app.listen(port, (req, res) => {
   console.log('start on 3000')
 })
