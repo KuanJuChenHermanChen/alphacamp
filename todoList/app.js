@@ -20,7 +20,9 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
-const Todo = require('./models/todo')
+//引用路由器
+const routes = require('./routes')
+
 const app = express()
 const port = 3000
 
@@ -29,87 +31,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
-
-app.get('/', async (req, res, next) => {
-  try {
-    const todos = await Todo.find().lean().sort({ _id: 'desc' })
-    res.render('index', { todos })
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
-app.get('/todos/new', (req, res, next) => {
-  try {
-    res.render('new')
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-
-})
-
-app.post('/todos', async (req, res, next) => {
-  try {
-    const name = req.body.name.trim()
-    await Todo.create({ name })
-    res.redirect('/')
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
-app.get('/todos/:id', async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const todo = await Todo.findById(id).lean()
-    res.render('detail', { todo })
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
-app.get('/todos/:id/edit', async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const todo = await Todo.findById(id).lean()
-    res.render('edit', { todo })
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
-app.put('/todos/:id', async (req, res, next) => {
-  try {
-    const id = req.params.id
-    const name = req.body.name.trim()
-    const isDone = req.body.isDone === 'on'
-    const todo = await Todo.findById(id)
-    todo.name = name
-    todo.isDone = isDone
-    await todo.save()
-    res.redirect(`/todos/${id}`)
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
-app.delete('/todos/:id', async (req, res, next) => {
-  try {
-    const id = req.params.id
-    await Todo.findByIdAndDelete(id)
-    res.redirect('/')
-  } catch (err) {
-    console.error(err)
-    next(err);
-  }
-})
-
+//將request 導入路由器
+app.use(routes)
 
 app.listen(port, (req, res) => {
   console.log('start on 3000')
