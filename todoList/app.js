@@ -96,6 +96,18 @@ app.put('/todos/:id', async (req, res, next) => {
   }
 })
 
+app.delete('/todos/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    await Todo.findByIdAndDelete(id)
+    res.redirect('/')
+  } catch (err) {
+    console.error(err)
+    next(err);
+  }
+})
+
+
 app.listen(port, (req, res) => {
   console.log('start on 3000')
 })
