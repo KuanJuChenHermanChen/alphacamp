@@ -8,11 +8,18 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 const db = mongoose.connection
 
 // 當連線成功時執行
-mongoose.connection.on('connected', function () {
+mongoose.connection.once('connected', async function () {
   console.log('Mongoose 連線成功！');
-  // 新增種子資料
-  for (let i = 0; i < 10; i++) {
-    Todo.create({ name: 'name-' + i })
+  // 確認資料庫是否為空，若是則新增種子資料
+  const counts = await Todo.countDocuments()
+  if (counts === 0) {
+    // 新增種子資料
+    for (let i = 0; i < 10; i++) {
+      await Todo.create({ name: 'name-' + i })
+      console.log('種子資料新增成功！');
+    }
+  } else {
+    console.log('資料庫已有資料，不需新增種子資料！')
   }
 });
 
@@ -33,3 +40,4 @@ process.on('SIGINT', function () {
     process.exit(0);
   });
 });
+
