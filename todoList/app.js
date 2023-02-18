@@ -22,6 +22,9 @@ const Todo = require('./models/todo')
 const app = express()
 const port = 3000
 
+//setting body-parser
+app.use(express.urlencoded({ extended: true }))
+
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
@@ -33,6 +36,27 @@ app.get('/', async (req, res, next) => {
     console.error(err)
     next(err);
   }
+})
+
+app.get('/todos/new', (req, res, next) => {
+  try {
+    res.render('new')
+  } catch (err) {
+    console.error(err)
+    next(err);
+  }
+  
+})
+
+app.post('/todos', async (req, res, next) => {
+  try {
+    const name = req.body.name.trim()
+    await Todo.create({name})
+    res.redirect('/')
+  } catch (err) {
+    console.error(err)
+    next(err);
+  } 
 })
 
 app.listen(port, (req, res) => {
