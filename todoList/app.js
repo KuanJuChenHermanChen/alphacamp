@@ -4,6 +4,7 @@ const methodOverride = require('method-override')
 
 // 載入 mongoose
 const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
 // 載入 dotenv
 if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 // 設定連線到 mongoDB
@@ -46,18 +47,18 @@ app.get('/todos/new', (req, res, next) => {
     console.error(err)
     next(err);
   }
-  
+
 })
 
 app.post('/todos', async (req, res, next) => {
   try {
     const name = req.body.name.trim()
-    await Todo.create({name})
+    await Todo.create({ name })
     res.redirect('/')
   } catch (err) {
     console.error(err)
     next(err);
-  } 
+  }
 })
 
 app.get('/todos/:id', async (req, res, next) => {
@@ -86,8 +87,10 @@ app.put('/todos/:id', async (req, res, next) => {
   try {
     const id = req.params.id
     const name = req.body.name.trim()
+    const isDone = req.body.isDone === 'on'
     const todo = await Todo.findById(id)
     todo.name = name
+    todo.isDone = isDone
     await todo.save()
     res.redirect(`/todos/${id}`)
   } catch (err) {
