@@ -70,6 +70,31 @@ app.get('/todos/:id', async (req, res, next) => {
   }
 })
 
+app.get('/todos/:id/edit', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const todo = await Todo.findById(id).lean()
+    res.render('edit', { todo })
+  } catch (err) {
+    console.error(err)
+    next(err);
+  }
+})
+
+app.post('/todos/:id/edit', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const name = req.body.name.trim()
+    const todo = await Todo.findById(id)
+    todo.name = name
+    await todo.save()
+    res.redirect(`/todos/${id}`)
+  } catch (err) {
+    console.error(err)
+    next(err);
+  }
+})
+
 app.listen(port, (req, res) => {
   console.log('start on 3000')
 })
