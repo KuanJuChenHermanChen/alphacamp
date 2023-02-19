@@ -23,9 +23,7 @@ db.once('connected', async function () {
       })
     }
     console.log('資料庫已新增種子資料')
-    db.close()
   } else {
     console.log('資料庫已有種子資料，無需再新增')
-    db.close()
   }
 })
