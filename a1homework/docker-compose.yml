@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  database:
+    image: mongo:latest
+    container_name: mongodb-container-for-restaurants
+    volumes:
+      - mongo-volumes-for-restaurants:/data/db
+    ports:
+      - 27019:27017
+
+volumes:
+  mongo-volumes-for-restaurants:

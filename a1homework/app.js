@@ -1,10 +1,9 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
-
+require('./config/mongoose')
+require('./models/seeds/restaurantSeeder')
 const app = express()
-const port = 3000
-
-const restaurantList = require('./restaurant.json')
+const port = 3005
 
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
