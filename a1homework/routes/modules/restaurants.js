@@ -2,6 +2,15 @@ const express = require('express')
 const router = express.Router()
 const Restaurant = require('../../models/restaurant')
 
+router.post('/', async (req, res) => {
+  try {
+    const restaurant = await Restaurant.create(req.body)
+    res.redirect(`/restaurants/${restaurant._id}`)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 router.get('/search', async (req, res) => {
   try {
     const keyword = req.query.keyword.trim()
@@ -18,6 +27,15 @@ router.get('/search', async (req, res) => {
       res.render('index', { restaurants })
     }
   } catch (error) {
+    console.log(error)
+  }
+})
+
+router.get('/new', (req, res) => {
+  try {
+    res.render('new')
+  }
+  catch (error) {
     console.log(error)
   }
 })
