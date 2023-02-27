@@ -1,9 +1,16 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const express = require('express')
+const exphbs = require('express-handlebars')
+const app = express()
+const port = 3000
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.engine('handlebars', exphbs.engine())
+app.set('view engine', 'handlebars')
+app.use(express.static("public"))
+
+app.get('/', (req, res) => {
+  res.render('index')
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
-});
+})
