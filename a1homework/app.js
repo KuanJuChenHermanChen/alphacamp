@@ -5,7 +5,7 @@ const routes = require('./routes')
 require('./config/mongoose')
 require('./models/seeds/restaurantSeeder')
 const app = express()
-const port = 3005
+const port = 3000
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))

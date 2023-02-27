@@ -9,5 +9,18 @@ services:
     ports:
       - 27019:27017
 
+  server:
+    build: .
+    image: server-image-for-restaurants
+    container_name: server-container-for-restaurants
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+
 volumes:
   mongo-volumes-for-restaurants:
